@@ -158,33 +158,5 @@ Encode kubeconfig:
 cat ~/.kube/config | base64 -w0
 ```
 
----
 
-## How to Present This Project on Upwork
 
-You can describe it like this:
-
-> Implemented an end-to-end DevOps demo project, including Dockerized FastAPI application, Kubernetes deployment, and a full GitHub Actions CI/CD pipeline that runs tests, builds Docker images, pushes them to Docker Hub, and deploys to a Kubernetes cluster.
-
-Demonstrates skills in:
-
-- Docker & containerization
-- Kubernetes (manifests, probes, Services)
-- GitHub Actions CI/CD
-- Python testing
-- Cloud-native workflows
-
----
-
-## Future Improvements
-
-- Add Ingress + TLS (Cert-Manager)
-- Add Helm chart
-- Add Prometheus metrics + Grafana dashboards
-- Implement blue-green or canary deployments
-- Add staging/production environments
-
----
-
-## License
-MIT
