@@ -1,162 +1,110 @@
-# DevOps Portfolio: Containerized FastAPI App with CI/CD and Kubernetes
+# Cloud-Native Infrastructure Project
 
-This repository is a **DevOps-focused demo project** that showcases:
-
-- A small **FastAPI** web service with health checks and tests  
-- A **Dockerized** application with `docker-compose` for local development  
-- **Kubernetes manifests** (Deployment, Service, Namespace)  
-- A **GitHub Actions CI/CD pipeline** that:
-  - runs tests
-  - builds and pushes a Docker image to Docker Hub
-  - deploys the app to a Kubernetes cluster
-
-It is designed as a **portfolio project** for job platforms like Upwork or as an example of your DevOps skills.
+This project demonstrates a complete DevOps lifecycle: from application development to automated CI/CD and deployment into Kubernetes. It showcases key cloud-native practices such as containerization, orchestration, automation, and infrastructure delivery.
 
 ---
 
-## Architecture Overview
-
-### 1. Application (FastAPI)
-- `app/main.py` contains a small API with:
-  - `/` — root endpoint returning metadata (hostname, env)
-  - `/healthz` — health check endpoint
-- `app/tests/test_main.py` contains integration tests using `pytest` and `TestClient`.
-
-### 2. Containerization
-- `Dockerfile` builds a production-ready Python image.
-- `docker-compose.yml` enables local development with:
-  - automatic rebuild
-  - environment variables
-  - port forwarding
-
-### 3. Kubernetes
-Manifests located in `k8s/`:
-- **Namespace**: `devops-portfolio`
-- **Deployment**:
-  - 2 replicas
-  - readiness & liveness probes
-  - image: `<your-dockerhub-user>/devops-portfolio-web:latest`
-- **Service**:
-  - ClusterIP
-  - port 80 → 8000
-
-### 4. CI/CD (GitHub Actions)
-Workflow: `.github/workflows/ci-cd.yml`
-
-Jobs:
-1. **tests**
-   - Setup Python
-   - Install dependencies
-   - Run tests with `pytest`
-
-2. **build_and_push** (only on `main`)
-   - Login to Docker Hub
-   - Build Docker image
-   - Push image with tags:
-     - `latest`
-     - commit SHA
-
-3. **deploy**
-   - Load kubeconfig from GitHub Secret
-   - Apply all Kubernetes manifests
+## 🚀 **Key Features**
+- Application containerization using **Docker**
+- Local development via **docker-compose**
+- Automated CI/CD using **GitHub Actions**
+- Image publishing to **Docker Hub**
+- Deployment to **Kubernetes** (Deployment, Service, Namespace)
+- Simple **FastAPI** web service with tests
+- Clean and production-oriented repository structure
 
 ---
 
-## Getting Started
-
-### Prerequisites
-- Python 3.11+
-- Docker & Docker Compose
-- (Optional) Kubernetes cluster and `kubectl`
-- (Optional) Docker Hub account
-
----
-
-## Run Locally
-
-### 1. Run with Python
-
-```bash
-pip install -r app/requirements.txt
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+## 🏗️ **Project Architecture**
 ```
-
-Open: http://localhost:8000  
-Health: http://localhost:8000/healthz
-
-Run tests:
-
-```bash
-pytest app/tests -v
+├── app/                 # FastAPI application + tests
+├── k8s/                 # Kubernetes manifests
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── namespace.yaml
+├── Dockerfile           # Container build
+├── docker-compose.yml   # Local environment
+├── .github/workflows/   # CI/CD pipeline
+│   └── ci-cd.yaml
+└── README.md
 ```
 
 ---
 
-### 2. Run with Docker Compose
+## 📦 **Technology Stack**
+- **FastAPI** — backend service
+- **Pytest** — testing
+- **Docker / Docker Compose** — containerization
+- **Kubernetes** — orchestration
+- **GitHub Actions** — CI/CD automation
+- **Docker Hub** — container registry
 
-```bash
+---
+
+## ⚙️ **CI/CD Pipeline**
+### GitHub Actions performs:
+1. Dependency installation
+2. Running unit tests
+3. Building Docker image
+4. Pushing image to Docker Hub
+5. Deploying updates automatically to Kubernetes
+
+This ensures fast, stable, and automated delivery with zero manual steps.
+
+---
+
+## 📁 **Kubernetes Manifests**
+Inside the `k8s/` directory:
+- `namespace.yaml` — defines the application namespace
+- `deployment.yaml` — main deployment spec with update strategy
+- `service.yaml` — exposes the application inside the cluster
+
+Deployment command:
+```
+kubectl apply -f k8s/
+```
+
+---
+
+## ▶️ **Local Development**
+### 1. Run with Docker:
+```
+docker build -t myapp .
+docker run -p 8000:8000 myapp
+```
+
+### 2. Run via docker-compose:
+```
 docker-compose up --build
 ```
 
-Service: http://localhost:8000
-
----
-
-## Docker
-
-Build manually:
-
-```bash
-docker build -t your-dockerhub-username/devops-portfolio-web:local .
-docker run -p 8000:8000 your-dockerhub-username/devops-portfolio-web:local
+Application will be available at:
+```
+http://localhost:8000
 ```
 
 ---
 
-## Kubernetes Deployment
-
-### Apply manifests
-
-```bash
-kubectl apply -f k8s/namespace.yaml
-kubectl apply -f k8s/deployment.yaml
-kubectl apply -f k8s/service.yaml
+## 📘 **Testing**
+Run tests using:
+```
+pytest
 ```
 
-### Check resources
-
-```bash
-kubectl get pods -n devops-portfolio
-kubectl get svc -n devops-portfolio
-```
-
-Local port-forward:
-
-```bash
-kubectl port-forward svc/devops-portfolio-web -n devops-portfolio 8080:80
-```
-
-Then open: http://localhost:8080
+Tests are integrated into CI/CD and must pass before merging.
 
 ---
 
-## CI/CD with GitHub Actions
+## ☸️ **Kubernetes Deployment**
+Ensure your cluster is running and `kubectl` is configured.
 
-Triggered on:
-- push to `main`
-- pull request to `main`
-
-### Required GitHub Secrets
-
-- `DOCKERHUB_USERNAME`
-- `DOCKERHUB_TOKEN`
-- `KUBE_CONFIG_DATA` — base64-encoded kubeconfig
-
-Encode kubeconfig:
-
-```bash
-cat ~/.kube/config | base64 -w0
+Apply manifests:
+```
+kubectl apply -f k8s/
 ```
 
-
+Check status:
+```
+kubectl get pods -n cloud-native-app
+```
 
